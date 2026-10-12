@@ -1,85 +1,62 @@
 <!doctype html>
-<html lang="ja">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>あいちマチラボ | 街の未来を地図から考えよう</title>
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <style>
-:root{--green:#39764d;--pale:#edf5e8;--cream:#fbfcf7;--ink:#273329;--muted:#697468;--red:#d96350}
-*{box-sizing:border-box}body{margin:0;background:var(--cream);color:var(--ink);font-family:system-ui,-apple-system,"Yu Gothic",Meiryo,sans-serif}
-header{background:#fff;border-bottom:1px solid #e5eadf;padding:15px max(18px,calc((100% - 1100px)/2));display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:1000}
-.logo{width:45px;height:45px;background:#e2efda;border-radius:14px;display:grid;place-items:center;font-size:25px}
-.brand{font-weight:850;font-size:19px}.tagline{font-size:12px;color:var(--muted);margin-top:2px}.demo{margin-left:auto;background:#f7edcf;color:#85692d;border-radius:99px;padding:7px 11px;font-size:11px;font-weight:800}
-main{max-width:1100px;margin:auto;padding:25px 18px 48px}.eyebrow{font-size:11px;letter-spacing:1.8px;font-weight:850;color:var(--green)}h1{font-size:clamp(27px,4vw,40px);line-height:1.25;margin:8px 0 10px;letter-spacing:-.8px}.intro{color:var(--muted);line-height:1.8;max-width:690px;margin:0 0 22px}
-.toolbar{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0}.tab,.btn{border:1px solid #d8e2d2;border-radius:999px;padding:10px 15px;background:#fff;color:#42604a;font-weight:750;font-size:13px;cursor:pointer}.tab.active,.btn.primary{background:var(--green);border-color:var(--green);color:#fff}.layout{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(280px,.8fr);gap:17px;align-items:start}.card{background:#fff;border:1px solid #e3e8de;border-radius:19px;overflow:hidden;box-shadow:0 4px 18px #23351d08}.cardhead{padding:15px 17px;display:flex;align-items:center;justify-content:space-between;gap:10px}.cardhead h2{font-size:17px;margin:0}.sub{font-size:12px;color:var(--muted);margin-top:4px}.pill{background:#edf5e8;color:var(--green);font-size:11px;font-weight:800;border-radius:99px;padding:6px 9px;white-space:nowrap}
-#map{height:480px;width:100%;background:#e7eadf}.mapfoot{padding:11px 15px;font-size:11px;color:var(--muted);line-height:1.6;border-top:1px solid #edf0e8}.detail{padding:18px}.category{display:inline-block;background:#f7edcf;color:#87672d;border-radius:99px;padding:5px 9px;font-size:11px;font-weight:800}.detail h2{font-size:23px;margin:10px 0 3px}.location{font-size:12px;color:var(--muted)}.sectionlabel{font-size:11px;font-weight:850;color:var(--muted);margin:19px 0 7px}.description{line-height:1.75;font-size:14px}.idea{background:#edf5e8;border-radius:13px;padding:13px;font-size:14px;line-height:1.75}.scene{margin-top:13px;background:linear-gradient(180deg,#e7f3f8,#f4f5df);border-radius:13px;min-height:100px;display:grid;place-items:center;font-size:35px;letter-spacing:8px}.caption{text-align:center;font-size:10px;color:var(--muted);margin-top:6px}.likesrow{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:16px;padding-top:14px;border-top:1px solid #edf0e8}.likes{font-weight:850}.likebtn{border:0;background:var(--green);color:#fff;border-radius:99px;padding:11px 15px;font-weight:800;cursor:pointer}.formcard{margin-top:17px;padding:18px}.formcard h2{font-size:18px;margin:0 0 6px}.formcard p{font-size:12px;line-height:1.65;color:var(--muted);margin:0 0 14px}label{display:block;font-size:12px;font-weight:800;margin:12px 0 5px}input,textarea,select{font:inherit;width:100%;padding:11px;border:1px solid #dce3d7;border-radius:11px;background:#fff;font-size:13px;color:var(--ink)}textarea{resize:vertical}form .btn{margin-top:14px;border-radius:11px;width:100%}.notice{font-size:11px;line-height:1.7;color:var(--muted);margin-top:16px;padding:13px;background:#f4f3ec;border-radius:12px}.compare{display:none;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}.compare.show{display:grid}.compare>div{padding:12px;border-radius:12px;font-size:12px;line-height:1.7}.before{background:#fff0eb}.after{background:#edf5e8}.compare b{display:block;margin-bottom:5px}
-.leaflet-popup-content-wrapper{border-radius:13px}.leaflet-popup-content{font-family:inherit;line-height:1.65}.custom-pin{border:2px solid #fff;border-radius:50% 50% 50% 8px;width:32px;height:32px;transform:rotate(-45deg);display:grid;place-items:center;color:white;font-weight:900;box-shadow:0 2px 7px #0003}.custom-pin span{transform:rotate(45deg)}
-@media(max-width:780px){header{padding:12px 15px}.layout{grid-template-columns:1fr}#map{height:390px}.detail h2{font-size:21px}main{padding:21px 12px 35px}.demo{font-size:10px}.tagline{max-width:210px}}
-</style>
-</head>
-<body>
-<header><div class="logo">🌱</div><div><div class="brand">あいちマチラボ</div><div class="tagline">見つけよう、わたしたちの街の可能性。</div></div><div class="demo">インタラクティブ試作品</div></header>
-<main>
-<div class="eyebrow">OUR TOWN, OUR FUTURE</div>
-<h1>街の「こうなったらいいな」を、<br>地図から見つけよう。</h1>
-<p class="intro">気になる場所を地図から選び、今ある課題と、みんなで考えた未来の姿を見比べよう。ピンを選ぶと、その場所の課題や改善アイデアが表示されます。</p>
-<div class="toolbar" role="group" aria-label="地図の表示モード">
-<button class="tab active" data-mode="now">📍 今の街</button><button class="tab" data-mode="future">🌳 みらいの街</button><button class="tab" data-mode="compare">↔ 比べて見る</button>
-</div>
-<div class="layout">
-<section class="card">
-<div class="cardhead"><div><h2 id="mapTitle">今の街マップ</h2><div class="sub" id="mapSub">赤いピンを選んで、改善したい場所を見つけよう。</div></div><span class="pill">OpenStreetMap</span></div>
-<div id="map" aria-label="愛知県名古屋市周辺の地図"></div>
-<div class="mapfoot">地図データ © OpenStreetMap contributors。赤いピンは改善したい場所、緑のピンは改善アイデアの例です。投稿地点はデモ用の仮の場所です。</div>
-</section>
-<aside>
-<section class="card"><div class="detail">
-<span class="category" id="category">安全・交通</span><h2 id="placeName">駅前の交差点</h2><div class="location" id="placeArea">名古屋市・デモ地点</div>
-<div class="sectionlabel" id="problemLabel">📍 今の課題</div><div class="description" id="problem"></div>
-<div class="sectionlabel">💡 改善アイデア</div><div class="idea" id="idea"></div>
-<div class="scene" id="scene">🚶　🚲　🌳</div><div class="caption">改善後のイメージ（絵文字による仮表現）</div>
-<div class="compare" id="compare"><div class="before"><b>📍 現在の課題</b><span id="beforeText"></span></div><div class="after"><b>🌱 未来のアイデア</b><span id="afterText"></span></div></div>
-<div class="likesrow"><div><div class="sub">このアイデアに共感したら</div><div class="likes" id="likes">♥ 24 いいね</div></div><button class="likebtn" id="likeBtn">♥ 共感する</button></div>
-</div></section>
-<section class="card formcard"><h2>あなたなら、どう変える？</h2><p>場所の名前、今の課題、改善案を入力すると、見本の投稿を地図に追加できます。位置は地図上で選択して登録する次段階の機能です。</p>
-<form id="postForm">
-<label for="newName">場所の名前</label><input id="newName" maxlength="60" required placeholder="例：図書館前の横断歩道">
-<label for="newProblem">今の課題</label><textarea id="newProblem" maxlength="250" required rows="2" placeholder="例：夕方は暗くて、横断歩道が見えにくい。"></textarea>
-<label for="newIdea">改善アイデア</label><textarea id="newIdea" maxlength="250" required rows="2" placeholder="例：照明を増やして、横断歩道を明るくする。"></textarea>
-<button class="btn primary" type="submit">＋ 見本の投稿を追加</button><div class="sub" id="formMessage" aria-live="polite"></div>
-</form></section>
-</aside>
-</div>
-<div class="notice">🔒 <b>試作品について：</b>投稿や「いいね」はこのページを開いている間だけのデモです。他の人とは共有されず、行政への送信も行いません。地図の背景にはインターネット接続が必要です。公開運用には、投稿審査、個人情報保護、位置情報の扱い、データ保存機能などが別途必要です。</div>
-</main>
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
-<script>
-const map=L.map('map').setView([35.1709,136.8815],13);
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'}).addTo(map);
-const entries=[
-{name:'駅前の交差点',area:'名古屋市中心部周辺（デモ地点）',category:'安全・交通',emoji:'🚸',problem:'歩道が狭く、通学時間は歩行者と自転車がすれ違いにくい。',idea:'歩道と自転車の通行スペースを分け、横断歩道も見やすくする。',scene:'🚶　🚲　🌳',likes:24,coords:[35.1709,136.8815]},
-{name:'公園の休憩スペース',area:'名古屋市中心部周辺（デモ地点）',category:'公園・居場所',emoji:'🌳',problem:'ベンチが少なく、休んだり友達と話したりできる場所が足りない。',idea:'木陰にベンチを増やし、誰でも立ち寄りやすい休憩スペースをつくる。',scene:'🌳　🪑　🌼',likes:18,coords:[35.177,136.895]},
-{name:'夕方の通学路',area:'名古屋市中心部周辺（デモ地点）',category:'安全・交通',emoji:'💡',problem:'夕方は道が暗く、歩行者や自転車から周囲が見えにくい。',idea:'必要な場所に照明を設置し、通学路の見通しをよくする。',scene:'💡　🚶　🌿',likes:31,coords:[35.1615,136.871]}
+:root{--g:#2f765b;--d:#205441;--m:#e5f2e9;--c:#faf8ef;--i:#263b32;--l:#dce7dd}
+*{box-sizing:border-box}body{margin:0;background:var(--c);color:var(--i);font-family:system-ui,"Noto Sans JP",sans-serif;line-height:1.6}
+header{padding:18px 5%;background:#fffdf7;border-bottom:1px solid var(--l);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}.brand{font-size:1.2rem;font-weight:800;color:var(--d)}small,.muted{color:#6c7e73}.tag,.pill{background:var(--m);color:var(--d);border-radius:99px;padding:5px 12px;font-size:.8rem;font-weight:700}
+main{max-width:1150px;margin:auto;padding:24px 16px 48px}.hero{background:#edf5e9;padding:26px;border-radius:22px;margin-bottom:18px}h1{font-size:clamp(1.7rem,4vw,2.5rem);line-height:1.3;color:var(--d);margin:8px 0}h2{font-size:1.15rem;color:var(--d);margin:0 0 12px}.panel{background:white;border:1px solid var(--l);border-radius:18px;padding:19px;margin:16px 0}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;align-items:end}label{display:block;font-weight:700;font-size:.88rem;margin-bottom:5px}select,input,textarea{width:100%;border:1px solid #cbdace;border-radius:10px;padding:10px;font:inherit;background:white;color:var(--i)}textarea{min-height:82px}button{border:0;border-radius:99px;padding:10px 15px;background:var(--g);color:white;font:inherit;font-weight:700;cursor:pointer}button.secondary{background:#edf4ee;color:var(--d);border:1px solid var(--l)}button.active{background:var(--d)}.notice{background:#f7f6ed;border-radius:11px;padding:11px;font-size:.82rem;color:#6c7e73;margin-top:12px}
+.mapgrid{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(250px,.8fr);gap:15px}#map{height:420px;border:1px solid var(--l);border-radius:14px}.details{background:#f8fbf6;border-radius:14px;padding:15px}.detail{margin:12px 0}.detail b{display:block;color:var(--g);font-size:.85rem}.idea{background:#e8f4e9;padding:10px;border-radius:10px}.posts{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}.post{border:1px solid var(--l);border-radius:14px;padding:14px}.posthead{display:flex;justify-content:space-between;gap:8px}.genre{background:#f4eee0;color:#80632a;padding:3px 8px;border-radius:99px;font-size:.75rem;font-weight:700;white-space:nowrap}.like{background:#fff0ed;color:#9b453b;border:1px solid #f2d5ce}.like:disabled{opacity:.6}.footer{font-size:.8rem;color:#6c7e73;margin-top:20px}@media(max-width:760px){.mapgrid{grid-template-columns:1fr}#map{height:340px}}
+</style></head><body>
+<header><div class="brand">🌱 あいちマチラボ<br><small>OUR TOWN, OUR FUTURE</small></div><span class="tag">見つけよう、わたしたちの街の可能性。</span></header>
+<main><section class="hero"><small>OUR TOWN, OUR FUTURE</small><h1>街の「こうなったらいいな」を、<br>地図から見つけよう。</h1><p>学校や地域を選んで、身近な課題と改善アイデアを見比べよう。気づいたことを投稿して、街の未来を一緒に考える試作品です。</p></section>
+<section class="panel"><h2>📍 学校・地域を選ぼう</h2><div class="grid"><div><label for="schoolType">学校の種類</label><select id="schoolType"><option value="city">名古屋市立学校</option><option value="pref">愛知県立学校</option></select></div><div><label for="school">学校名</label><select id="school"></select></div><div><label for="ward">名古屋市の区</label><select id="ward"></select></div><button id="show">この区の情報を見る</button></div><p class="notice">学校名は動作確認用のサンプルです。実際の運用前に、学校名と所在地の対応を公式情報で確認してください。</p></section>
+<section class="panel"><h2>🗺️ 街のマップ</h2><div class="grid" style="margin-bottom:12px"><div><label>マップの見方</label><button class="secondary active" data-mode="now">📍 今の街</button> <button class="secondary" data-mode="future">🌳 みらいの街</button> <button class="secondary" data-mode="both">↔ 比べる</button></div><div><label for="genreFilter">ジャンルで絞り込む</label><select id="genreFilter"><option value="all">すべて</option><option>安全・交通</option><option>公園・自然</option><option>施設・居場所</option><option>防災</option><option>その他</option></select></div></div>
+<div class="mapgrid"><div><div id="map"></div><small>地図データ © OpenStreetMap contributors。ピンはサンプル地点です。</small></div><div class="details"><span class="pill">選択した区</span><h3 id="wardTitle"></h3><div class="detail"><b>📍 今ある課題（サンプル）</b><p id="issue"></p></div><div class="detail idea"><b>💡 改善アイデア（サンプル）</b><p id="idea"></p></div><div class="detail"><b>🌱 みんなの声</b><p id="count"></p></div></div></div></section>
+<section class="panel"><h2>💬 あなたなら、どう変える？</h2><p>投稿数に上限はありません。</p><form id="form"><div class="grid"><div><label for="place">場所・施設の名前</label><input id="place" required maxlength="70" placeholder="例：学校近くの横断歩道"></div><div><label for="postGenre">ジャンル</label><select id="postGenre"><option>安全・交通</option><option>公園・自然</option><option>施設・居場所</option><option>防災</option><option>その他</option></select></div><div><label for="postWard">区</label><select id="postWard"></select></div></div><div class="grid" style="margin-top:12px"><div><label for="postIssue">今の課題</label><textarea id="postIssue" required maxlength="500" placeholder="どんなことが気になりますか？"></textarea></div><div><label for="postIdea">改善アイデア</label><textarea id="postIdea" required maxlength="500" placeholder="どうなったらよいと思いますか？"></textarea></div></div><p style="text-align:right"><button>＋ 投稿を追加</button></p></form><p class="notice">試作品の投稿と「いいね」はこのブラウザ内だけで動き、再読み込みするとリセットされます。他の利用者には共有されません。公開運用にはデータベース、サーバー側でのいいね制御、投稿審査、個人情報保護対応が必要です。</p></section>
+<section class="panel"><div class="grid"><div><h2>🌱 みんなの課題とアイデア</h2><small id="summary"></small></div><div><label for="sort">並び順</label><select id="sort"><option value="new">新着順</option><option value="likes">いいね順</option></select></div></div><div id="posts" class="posts"></div></section>
+<p class="footer">あいちマチラボは街の課題と改善案を考える試作品です。実際の行政への送信や公的な意見提出は行いません。</p></main>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script><script>
+const W={
+"千種区":[35.166,136.946,"歩道や交差点で、歩行者と自転車が安心して通れる空間づくりが課題です。","通学路の危険箇所を共有し、見通しの改善や案内表示を検討します。"],
+"東区":[35.179,136.926,"駅や公共施設の周辺で、歩行者が移動しやすい案内や休憩場所が求められます。","案内表示を見直し、ベンチや日陰のある休憩スペースを検討します。"],
+"北区":[35.197,136.911,"生活道路での交通安全や、地域の居場所づくりが課題です。","危険箇所を地図で共有し、地域の居場所や交流イベントを増やします。"],
+"西区":[35.196,136.891,"歩行者と自転車の通行空間や、地域の魅力をつなぐ回遊性が課題です。","通学・通勤ルートを点検し、歩きやすい道や地域スポットを紹介します。"],
+"中村区":[35.168,136.873,"駅周辺の混雑時にも、安全に歩ける動線や分かりやすい案内が必要です。","歩行者の動線を整理し、案内表示や待ち合わせ場所の改善を検討します。"],
+"中区":[35.163,136.906,"人が集まる場所での歩きやすさ、休憩場所、ごみ対策などが課題です。","歩行者空間と休憩場所を整え、分別しやすいごみ箱の配置を考えます。"],
+"昭和区":[35.150,136.934,"学生や地域住民が使いやすい居場所と、通学路の安全確保が課題です。","公共施設の学習・交流スペースを周知し、通学路の安全点検を行います。"],
+"瑞穂区":[35.131,136.935,"坂道や交差点など、誰もが移動しやすい環境が必要です。","段差や見通しを点検し、安心して移動できるルートを案内します。"],
+"熱田区":[35.128,136.910,"地域の歴史・文化資源へのアクセスと歩行者の安全を両立する工夫が課題です。","安全な散策ルートや地域の見どころをまとめ、案内を分かりやすくします。"],
+"中川区":[35.141,136.854,"生活道路の交通安全や、水害などに備えた防災情報の周知が大切です。","避難場所と安全な経路を確認できる地図を作り、地域で共有します。"],
+"港区":[35.107,136.884,"災害時の避難や地域施設へのアクセスなど、安心して暮らす環境づくりが課題です。","避難経路や地域施設の案内を充実させます。"],
+"南区":[35.095,136.925,"通学路や生活道路の安全対策、地域での防災意識の共有が課題です。","危険箇所を点検して共有し、地域で参加できる防災企画を行います。"],
+"守山区":[35.203,136.977,"住宅地から駅・施設への移動のしやすさや、緑地の活用が課題です。","歩きやすい経路を紹介し、地域の緑や公園を活用した交流を促します。"],
+"緑区":[35.077,136.952,"住宅地の交通安全と、公園を世代を超えて使える場所にする工夫が必要です。","通学路の安全点検と、公園利用者の声を集めた改善案づくりを行います。"],
+"名東区":[35.175,137.010,"坂道や駅までの移動、世代ごとの居場所づくりが課題です。","歩きやすいルートや休憩ポイントを見える化し、交流スペースを周知します。"],
+"天白区":[35.122,136.975,"通学路の安全や、災害時に必要な情報の共有が課題です。","通学路と避難場所の情報を地図にまとめ、地域で点検・共有します。"]
+};
+const wards=Object.keys(W),$=id=>document.getElementById(id);
+const city=wards.map(w=>["名古屋市立・サンプル校（"+w+"）",w]),pref=wards.map(w=>["愛知県立・サンプル校（"+w+"）",w]);
+function fill(el,arr){el.innerHTML="";arr.forEach(x=>{let o=document.createElement("option");o.value=Array.isArray(x)?x[0]:x;o.textContent=Array.isArray(x)?x[0]:x;el.appendChild(o)})}
+fill($("ward"),wards);fill($("postWard"),wards);
+function schools(){return $("schoolType").value==="city"?city:pref}
+let selected="千種区",mode="now",id=5,liked=new Set();
+let posts=[
+{id:1,place:"駅前の交差点",ward:"中区",genre:"安全・交通",issue:"歩行者と自転車の通る場所が近く、混雑する時間帯に不安があります。",idea:"歩行者の動線を分け、横断箇所を分かりやすくします。",likes:24},
+{id:2,place:"公園の休憩スペース",ward:"千種区",genre:"公園・自然",issue:"日差しが強い日に休める場所が少ないです。",idea:"木陰やベンチを増やし、誰もが休みやすい公園にします。",likes:18},
+{id:3,place:"地域の学習スペース",ward:"昭和区",genre:"施設・居場所",issue:"放課後や休日に気軽に学べる場所が見つけにくいです。",idea:"公共施設の学習スペースや利用時間をまとめて紹介します。",likes:12},
+{id:4,place:"避難場所までの道",ward:"港区",genre:"防災",issue:"初めての人には避難場所への道順が分かりにくい場合があります。",idea:"目印と安全な経路を地図で確認できるようにします。",likes:9}
 ];
-let selected=0,mode='now';const liked=new Set(),markers=[];
-function pinIcon(future){return L.divIcon({className:'',html:`<div class="custom-pin" style="background:${future?'#42845a':'#d96350'}"><span>${future?'✓':'!'}</span></div>`,iconSize:[32,32],iconAnchor:[16,28],popupAnchor:[0,-27]})}
-function popupContent(e,i){return `<b>${e.name}</b><br>${mode==='future'?'🌱 改善案：'+e.idea:'📍 課題：'+e.problem}<br><button onclick="window.pickPlace(${i})" style="margin-top:7px;padding:6px 9px;border:0;border-radius:8px;background:#39764d;color:white;font-weight:700">この場所を見る</button>`}
-function updateMarkers(){markers.forEach((m,i)=>{m.setIcon(pinIcon(mode==='future'));m.setPopupContent(popupContent(entries[i],i));});}
-function render(){const e=entries[selected];document.querySelectorAll('[data-mode]').forEach(b=>b.classList.toggle('active',b.dataset.mode===mode));
-document.getElementById('mapTitle').textContent=mode==='now'?'今の街マップ':mode==='future'?'みらいの街マップ':'今と未来を比べるマップ';
-document.getElementById('mapSub').textContent=mode==='now'?'赤いピンを選んで、改善したい場所を見つけよう。':mode==='future'?'緑のピンを選んで、改善アイデアを見てみよう。':'同じ場所の課題と改善案を見比べよう。';
-document.getElementById('category').textContent=e.category;document.getElementById('placeName').textContent=e.name;document.getElementById('placeArea').textContent=e.area;
-document.getElementById('problemLabel').textContent=mode==='future'?'🌱 目指す未来':'📍 今の課題';document.getElementById('problem').textContent=mode==='future'?e.idea:e.problem;document.getElementById('idea').textContent=e.idea;document.getElementById('scene').textContent=e.scene;
-document.getElementById('compare').classList.toggle('show',mode==='compare');document.getElementById('beforeText').textContent=e.problem;document.getElementById('afterText').textContent=e.idea;
-document.getElementById('likes').textContent='♥ '+(e.likes+(liked.has(selected)?1:0))+' いいね';document.getElementById('likeBtn').textContent=liked.has(selected)?'♥ 共感済み':'♥ 共感する';updateMarkers();}
-window.pickPlace=function(i){selected=i;render();};
-entries.forEach((e,i)=>{const m=L.marker(e.coords,{icon:pinIcon(false)}).addTo(map);m.bindPopup(popupContent(e,i));m.on('click',()=>{selected=i;render()});markers.push(m);});
-document.querySelectorAll('[data-mode]').forEach(b=>b.addEventListener('click',()=>{mode=b.dataset.mode;render()}));
-document.getElementById('likeBtn').addEventListener('click',()=>{if(liked.has(selected))liked.delete(selected);else liked.add(selected);render()});
-document.getElementById('postForm').addEventListener('submit',ev=>{ev.preventDefault();const name=document.getElementById('newName').value.trim(),problem=document.getElementById('newProblem').value.trim(),idea=document.getElementById('newIdea').value.trim();if(!name||!problem||!idea)return;
-const e={name,area:'投稿された見本（位置は未指定）',category:'みんなの提案',emoji:'💡',problem,idea,scene:'🏘️　🌱　✨',likes:0,coords:[35.1709+(Math.random()-.5)*.018,136.8815+(Math.random()-.5)*.022]};entries.push(e);const i=entries.length-1;const m=L.marker(e.coords,{icon:pinIcon(mode==='future')}).addTo(map);m.bindPopup(popupContent(e,i));m.on('click',()=>{selected=i;render()});markers.push(m);selected=i;mode='compare';render();map.setView(e.coords,15);document.getElementById('postForm').reset();document.getElementById('formMessage').textContent='追加しました！ このピンは仮の位置です。';});
-render();
-</script>
-</body>
-</html>
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+const map=L.map("map").setView([35.16,136.91],11);L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:19,attribution:"&copy; OpenStreetMap contributors"}).addTo(map);let markers=[];
+function markersDraw(){markers.forEach(m=>map.removeLayer(m));markers=[];posts.filter(p=>p.ward===selected&&($("genreFilter").value==="all"||p.genre===$("genreFilter").value)).forEach(p=>{let w=W[p.ward],lat=p.lat||w[0]+(p.id*.001),lon=p.lon||w[1]+(p.id*.001);let color=mode==="future"?"#2f965f":mode==="both"?"#6d8d69":"#d86c5b";let ic=L.divIcon({className:"",html:`<div style="background:${color};border:2px solid white;border-radius:50%;width:19px;height:19px;box-shadow:0 2px 5px #0003"></div>`,iconSize:[19,19]});markers.push(L.marker([lat,lon],{icon:ic}).addTo(map).bindPopup("<b>"+esc(p.place)+"</b><br>"+esc(p.genre)+"<br>"+esc(p.issue)+"<hr>"+esc(p.idea)))})}
+function render(){let a=posts.filter(p=>p.ward===selected&&($("genreFilter").value==="all"||p.genre===$("genreFilter").value));a.sort($("sort").value==="likes"?(x,y)=>y.likes-x.likes:(x,y)=>y.id-x.id);$("summary").textContent=selected+"の投稿 "+a.length+" 件";$("count").textContent="この区の投稿 "+posts.filter(p=>p.ward===selected).length+" 件";let root=$("posts");root.innerHTML="";if(!a.length){root.innerHTML="<p>この区にはまだ投稿がありません。最初のアイデアを投稿してみよう！</p>"}a.forEach(p=>{let c=document.createElement("article");c.className="post";let done=liked.has(p.genre);c.innerHTML=`<div class="posthead"><h3>${esc(p.place)}</h3><span class="genre">${esc(p.genre)}</span></div><small>名古屋市・${esc(p.ward)}</small><div class="detail"><b>📍 今の課題</b><p>${esc(p.issue)}</p></div><div class="detail idea"><b>💡 改善アイデア</b><p>${esc(p.idea)}</p></div><p><button class="like" data-id="${p.id}" ${done?"disabled":""}>${done?"♥ いいね済み":"♡ 共感する"} · ${p.likes}</button> <small>${done?"このジャンルはいいね済み":"1ジャンルにつき1回"}</small></p>`;root.appendChild(c)});root.querySelectorAll("[data-id]").forEach(b=>b.onclick=()=>{let p=posts.find(x=>x.id===+b.dataset.id);if(p&&!liked.has(p.genre)){liked.add(p.genre);p.likes++;render();markersDraw()}});markersDraw()}
+function selectWard(w){selected=w;$("ward").value=w;$("postWard").value=w;$("wardTitle").textContent="名古屋市・"+w;$("issue").textContent=W[w][2];$("idea").textContent=W[w][3];render();map.setView([W[w][0],W[w][1]],12)}
+function refreshSchools(){fill($("school"),schools());selectWard(schools()[0][1])}
+$("schoolType").onchange=refreshSchools;$("school").onchange=()=>{let s=schools().find(x=>x[0]===$("school").value);if(s)selectWard(s[1])};$("ward").onchange=()=>selectWard($("ward").value);$("show").onclick=()=>selectWard($("ward").value);
+document.querySelectorAll("[data-mode]").forEach(b=>b.onclick=()=>{mode=b.dataset.mode;document.querySelectorAll("[data-mode]").forEach(x=>x.classList.toggle("active",x===b));markersDraw()});
+$("genreFilter").onchange=render;$("sort").onchange=render;
+$("form").onsubmit=e=>{e.preventDefault();let w=$("postWard").value;posts.push({id:id++,place:$("place").value.trim(),ward:w,genre:$("postGenre").value,issue:$("postIssue").value.trim(),idea:$("postIdea").value.trim(),likes:0});$("place").value="";$("postIssue").value="";$("postIdea").value="";selectWard(w)};
+refreshSchools();setTimeout(()=>map.invalidateSize(),100);
+</script></body></html>
