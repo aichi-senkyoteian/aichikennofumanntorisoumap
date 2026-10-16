@@ -8,7 +8,14 @@
 header{padding:18px 5%;background:#fffdf7;border-bottom:1px solid var(--l);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}.brand{font-size:1.2rem;font-weight:800;color:var(--d)}small,.muted{color:#6c7e73}.tag,.pill{background:var(--m);color:var(--d);border-radius:99px;padding:5px 12px;font-size:.8rem;font-weight:700}
 main{max-width:1150px;margin:auto;padding:24px 16px 48px}.hero{background:#edf5e9;padding:26px;border-radius:22px;margin-bottom:18px}h1{font-size:clamp(1.7rem,4vw,2.5rem);line-height:1.3;color:var(--d);margin:8px 0}h2{font-size:1.15rem;color:var(--d);margin:0 0 12px}.panel{background:white;border:1px solid var(--l);border-radius:18px;padding:19px;margin:16px 0}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;align-items:end}label{display:block;font-weight:700;font-size:.88rem;margin-bottom:5px}select,input,textarea{width:100%;border:1px solid #cbdace;border-radius:10px;padding:10px;font:inherit;background:white;color:var(--i)}textarea{min-height:82px}button{border:0;border-radius:99px;padding:10px 15px;background:var(--g);color:white;font:inherit;font-weight:700;cursor:pointer}button.secondary{background:#edf4ee;color:var(--d);border:1px solid var(--l)}button.active{background:var(--d)}.notice{background:#f7f6ed;border-radius:11px;padding:11px;font-size:.82rem;color:#6c7e73;margin-top:12px}
 .mapgrid{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(250px,.8fr);gap:15px}#map{height:420px;border:1px solid var(--l);border-radius:14px}.details{background:#f8fbf6;border-radius:14px;padding:15px}.detail{margin:12px 0}.detail b{display:block;color:var(--g);font-size:.85rem}.idea{background:#e8f4e9;padding:10px;border-radius:10px}.posts{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}.post{border:1px solid var(--l);border-radius:14px;padding:14px}.posthead{display:flex;justify-content:space-between;gap:8px}.genre{background:#f4eee0;color:#80632a;padding:3px 8px;border-radius:99px;font-size:.75rem;font-weight:700;white-space:nowrap}.like{background:#fff0ed;color:#9b453b;border:1px solid #f2d5ce}.like:disabled{opacity:.6}.delete{background:#fff;border:1px solid #e5b8b2;color:#a13f35;padding:7px 11px;font-size:.85rem}.edit{background:#edf4ee;color:var(--d);border:1px solid var(--l);padding:7px 11px;font-size:.85rem}.commentbox{border-top:1px solid var(--l);margin-top:13px;padding-top:11px}.comment{background:#f7faf5;border-radius:9px;padding:8px 10px;margin:7px 0;font-size:.9rem;overflow-wrap:anywhere}.commentform{display:grid;grid-template-columns:1fr auto;gap:7px;margin-top:8px}.commentform input{min-width:0}.postactions{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}.footer{font-size:.8rem;color:#6c7e73;margin-top:20px}@media(max-width:760px){.mapgrid{grid-template-columns:1fr}#map{height:340px}}
+
+/* どの位置からでも投稿フォームへ移動できる固定ボタン */
+.floating-post{position:fixed;right:24px;bottom:24px;z-index:1000;box-shadow:0 5px 18px rgba(32,84,65,.28);padding:14px 22px;font-size:1rem;border:2px solid #fff;display:flex;align-items:center;gap:7px}
+.floating-post:hover{transform:translateY(-2px)}
+.floating-post:focus-visible{outline:3px solid #d5a94b;outline-offset:3px}
+@media(max-width:760px){.floating-post{right:14px;bottom:calc(14px + env(safe-area-inset-bottom));padding:13px 18px}}
 </style></head><body>
+<button type="button" id="quickPost" class="floating-post" aria-label="投稿作成フォームへ移動">✏️ 投稿する</button>
 <header><div class="brand">🌱 あいちマチラボ<br><small>OUR TOWN, OUR FUTURE</small></div><span class="tag">見つけよう、わたしたちの街の可能性。</span></header>
 <main><section class="hero"><small>OUR TOWN, OUR FUTURE</small><h1>街の「こうなったらいいな」を、<br>地図から見つけよう。</h1><p>学校や地域を選んで、身近な課題と改善アイデアを見比べよう。気づいたことを投稿して、街の未来を一緒に考える試作品です。</p></section>
 <section class="panel"><h2>📍 学校・地域を選ぼう</h2><div class="grid"><div><label for="schoolType">学校の種類</label><select id="schoolType"><option value="city">名古屋市立学校</option><option value="pref">愛知県立学校</option></select></div><div><label for="school">学校名</label><select id="school"></select></div><div><label for="ward">名古屋市の区</label><select id="ward"></select></div><button id="show">この区の情報を見る</button></div><p class="notice">学校名は動作確認用のサンプルです。実際の運用前に、学校名と所在地の対応を公式情報で確認してください。</p></section>
@@ -18,6 +25,12 @@ main{max-width:1150px;margin:auto;padding:24px 16px 48px}.hero{background:#edf5e
 <section class="panel"><div class="grid"><div><h2>🌱 みんなの課題とアイデア</h2><small id="summary"></small></div><div><label for="sort">並び順</label><select id="sort"><option value="new">新着順</option><option value="likes">いいね順</option></select></div></div><div id="posts" class="posts"></div><p class="footer">✏️ 編集・削除はこのブラウザで作成した自分の投稿のみ。コメントはどの投稿にも書き込めます。※試作品のため、投稿者の判定はブラウザ内でのみ有効です。</p></section>
 <p class="footer">あいちマチラボは街の課題と改善案を考える試作品です。実際の行政への送信や公的な意見提出は行いません。</p></main>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script><script>
+// 画面のどこからでも、固定ボタンで投稿フォームへスムーズに移動
+$("quickPost").addEventListener("click",()=>{
+  const formSection=$("form").closest(".panel");
+  formSection.scrollIntoView({behavior:"smooth",block:"start"});
+  window.setTimeout(()=>$("place").focus({preventScroll:true}),450);
+});
 const W={
 "千種区":[35.166,136.946,"歩道や交差点で、歩行者と自転車が安心して通れる空間づくりが課題です。","通学路の危険箇所を共有し、見通しの改善や案内表示を検討します。"],
 "東区":[35.179,136.926,"駅や公共施設の周辺で、歩行者が移動しやすい案内や休憩場所が求められます。","案内表示を見直し、ベンチや日陰のある休憩スペースを検討します。"],
